@@ -1,4 +1,4 @@
-package filterprocessor
+package lua_processor
 
 import (
 	"context"
