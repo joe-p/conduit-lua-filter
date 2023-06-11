@@ -8,6 +8,8 @@ import (
 	lua "github.com/yuin/gopher-lua"
 	luar "layeh.com/gopher-luar"
 
+	"path/filepath"
+
 	"github.com/algorand/conduit/conduit/data"
 	"github.com/algorand/conduit/conduit/plugins"
 	"github.com/algorand/conduit/conduit/plugins/processors"
@@ -51,17 +53,20 @@ func (a *LuaProcessor) Config() string {
 }
 
 // Init initializes the filter processor
-func (a *LuaProcessor) Init(ctx context.Context, _ data.InitProvider, _ plugins.PluginConfig, logger *log.Logger) error {
+func (a *LuaProcessor) Init(ctx context.Context, _ data.InitProvider, cfg plugins.PluginConfig, logger *log.Logger) error {
 	a.logger = logger
 	a.ctx = ctx
 
 	a.luaState = lua.NewState()
 	defer a.luaState.Close()
-	if err := a.luaState.DoFile("./static.lua"); err != nil {
-		panic(err)
+
+	//go:embed static.lua
+	var staticLua string
+	if err := a.luaState.DoString(staticLua); err != nil {
+		return err
 	}
-	if err := a.luaState.DoFile("./filter.lua"); err != nil {
-		panic(err)
+	if err := a.luaState.DoFile(filepath.Join(cfg.DataDir, "filter.lua")); err != nil {
+		return err
 	}
 
 	return nil
