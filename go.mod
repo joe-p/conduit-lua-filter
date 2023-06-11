@@ -1,4 +1,4 @@
-module conduit-lua-processor
+module github.com/joe-p/conduit-lua-processor
 
 go 1.18
 
