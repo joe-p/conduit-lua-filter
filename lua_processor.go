@@ -97,10 +97,10 @@ func (a *LuaProcessor) Process(input data.BlockData) (data.BlockData, error) {
 		a.luaState.Pop(1)
 
 		if ret.String() == "true" {
-			println("Accepting txn", i)
+			a.logger.Infof("accepting txn %d", i)
 			filteredPayset = append(filteredPayset, payset[i])
 		} else {
-			println("Rejecting txn", i)
+			a.logger.Infof("rejecting txn %d", i)
 		}
 	}
 
