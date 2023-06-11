@@ -24,6 +24,9 @@ type Config struct {
 // PluginName to use when configuring.
 const PluginName = "lua_processor"
 
+//go:embed static.lua
+var staticLua string
+
 // package-wide init function
 func init() {
 	processors.Register(PluginName, processors.ProcessorConstructorFunc(func() processors.Processor {
@@ -60,8 +63,6 @@ func (a *LuaProcessor) Init(ctx context.Context, _ data.InitProvider, cfg plugin
 	a.luaState = lua.NewState()
 	defer a.luaState.Close()
 
-	//go:embed static.lua
-	var staticLua string
 	if err := a.luaState.DoString(staticLua); err != nil {
 		return err
 	}
