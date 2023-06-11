@@ -4,8 +4,8 @@ go 1.18
 
 require (
 	github.com/algorand/conduit v1.1.0
-	github.com/algorand/go-algorand-sdk/v2 v2.1.0
-	github.com/sirupsen/logrus v1.9.3
+	github.com/algorand/go-algorand-sdk/v2 v2.0.0-20230531123858-3a0efd6a6398
+	github.com/sirupsen/logrus v1.8.1
 	github.com/yuin/gopher-lua v1.1.0
 	layeh.com/gopher-luar v1.0.11
 )
