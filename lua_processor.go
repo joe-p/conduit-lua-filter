@@ -61,7 +61,6 @@ func (a *LuaProcessor) Init(ctx context.Context, _ data.InitProvider, cfg plugin
 	a.ctx = ctx
 
 	a.luaState = lua.NewState()
-	defer a.luaState.Close()
 
 	if err := a.luaState.DoString(staticLua); err != nil {
 		return err
@@ -74,8 +73,8 @@ func (a *LuaProcessor) Init(ctx context.Context, _ data.InitProvider, cfg plugin
 
 }
 
-// Close a no-op for this processor
 func (a *LuaProcessor) Close() error {
+	a.luaState.Close()
 	return nil
 }
 
