@@ -1,4 +1,4 @@
-module github.com/joe-p/conduit-lua-processor
+module github.com/joe-p/conduit-lua-filter
 
 go 1.18
 
