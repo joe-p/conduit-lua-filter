@@ -59,7 +59,7 @@ importer:
 # Zero or more processors may be defined to manipulate what data
 # reaches the exporter.
 processors:
-    - name: lua_processor
+    - name: lua_filter
 
 # An exporter is defined to do something with the data.
 exporter:

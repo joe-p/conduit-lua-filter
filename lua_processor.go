@@ -1,4 +1,4 @@
-package lua_processor
+package lua_filter
 
 import (
 	"context"
@@ -22,7 +22,7 @@ type Config struct {
 }
 
 // PluginName to use when configuring.
-const PluginName = "lua_processor"
+const PluginName = "lua_filter"
 
 //go:embed static.lua
 var staticLua string
@@ -30,18 +30,18 @@ var staticLua string
 // package-wide init function
 func init() {
 	processors.Register(PluginName, processors.ProcessorConstructorFunc(func() processors.Processor {
-		return &LuaProcessor{}
+		return &LuaFilter{}
 	}))
 }
 
-type LuaProcessor struct {
+type LuaFilter struct {
 	logger   *log.Logger
 	ctx      context.Context
 	luaState *lua.LState
 }
 
 // Metadata returns metadata
-func (a *LuaProcessor) Metadata() plugins.Metadata {
+func (a *LuaFilter) Metadata() plugins.Metadata {
 	return plugins.Metadata{
 		Name:         PluginName,
 		Description:  "Filter transactions out via a lua script.",
@@ -51,12 +51,12 @@ func (a *LuaProcessor) Metadata() plugins.Metadata {
 }
 
 // Config returns the config
-func (a *LuaProcessor) Config() string {
+func (a *LuaFilter) Config() string {
 	return ""
 }
 
 // Init initializes the filter processor
-func (a *LuaProcessor) Init(ctx context.Context, _ data.InitProvider, cfg plugins.PluginConfig, logger *log.Logger) error {
+func (a *LuaFilter) Init(ctx context.Context, _ data.InitProvider, cfg plugins.PluginConfig, logger *log.Logger) error {
 	a.logger = logger
 	a.ctx = ctx
 
@@ -73,13 +73,13 @@ func (a *LuaProcessor) Init(ctx context.Context, _ data.InitProvider, cfg plugin
 
 }
 
-func (a *LuaProcessor) Close() error {
+func (a *LuaFilter) Close() error {
 	a.luaState.Close()
 	return nil
 }
 
 // Process processes the input data
-func (a *LuaProcessor) Process(input data.BlockData) (data.BlockData, error) {
+func (a *LuaFilter) Process(input data.BlockData) (data.BlockData, error) {
 	var err error
 	payset := input.Payset
 	var filteredPayset []sdk.SignedTxnInBlock
@@ -87,7 +87,7 @@ func (a *LuaProcessor) Process(input data.BlockData) (data.BlockData, error) {
 	for i := 0; i < len(payset); i++ {
 		err = a.luaState.CallByParam(
 			lua.P{
-				Fn:      a.luaState.GetGlobal("processTxn"),
+				Fn:      a.luaState.GetGlobal("filterTxn"),
 				NRet:    1,
 				Protect: true,
 			},

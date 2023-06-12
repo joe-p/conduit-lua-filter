@@ -1,6 +1,6 @@
 counter = 0
 
-function processTxn(x)
+function filterTxn(x)
     print("Processing transaction " .. counter)
     counter = counter + 1
 
