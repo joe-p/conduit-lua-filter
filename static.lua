@@ -3,6 +3,10 @@
 -- Convert a []byte to a string
 -- Probably better to do this in Go, but forming the new struct seems like a lot of work... TODO with codegen
 function bytesToString(byteSlice)
+    if byteSlice == nil then
+        return ""
+    end
+
     local chars = {}
     for i in byteSlice() do
         currentByte = byteSlice[i]
